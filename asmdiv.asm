@@ -1,0 +1,36 @@
+DOSSEG
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    QUOT DB ?
+    REM DB ?
+
+.CODE
+
+MAIN PROC
+    MOV AX, @DATA
+    MOV DS, AX
+
+    MOV AX, 30
+    MOV BL, 5
+    DIV BL
+    MOV QUOT, AL
+    MOV REM, AH
+
+    MOV DL, QUOT
+    ADD DL, 48
+    MOV AH, 2
+    INT 21H
+
+    MOV DL, ' '
+    INT 21H
+
+    MOV DL, REM
+    ADD DL, 48
+    INT 21H
+
+    MOV AH, 4CH
+    INT 21H
+MAIN ENDP
+END MAIN
