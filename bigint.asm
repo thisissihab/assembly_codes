@@ -2,18 +2,14 @@
 .STACK 100H
 
 .DATA
-    MSG1 DB 'GOT A MATCH$'
-    MSG2 DB 'DOES NOT MATCH$'
-    STR1 DB 6 DUP('$')
-    NUM1 DW ?
     CTR DB ?
 .CODE
 MAIN PROC
     MOV AX, @DATA
     MOV DS, AX
 
-    MOV AX, 5000
-    SUB AX, 4000
+    MOV AX, 2
+    ADD AX, 1
 
     CALL PRES
 

@@ -4,37 +4,47 @@
 .data
     num dw 1234          ; 16-bit integer to convert
     buffer db 6 dup(?)   ; Buffer to hold the resulting string (maximum of 5 digits + null terminator)
-
+    len db ?
 .code
-main:
+main proc
     mov ax, @data        ; Initialize data segment
     mov ds, ax
 
-    mov ax, num          ; Load the 16-bit integer into AX
-    call int_to_str      ; Convert integer to string
+    mov ax, num
+    mov dx, 0
+    mov bx, 10
 
-    ; Print the resulting string
-    mov dx, offset buffer
-    mov ah, 09h          ; DOS function to print a string
-    int 21h              ; Call DOS
-
-    mov ah, 4Ch          ; DOS function to terminate the program
-    int 21h              ; Call DOS
-
-int_to_str proc
-    mov bx, 10           ; Base for conversion (decimal)
-    mov di, offset buffer + 5  ; Point DI to the end of the buffer
-    mov byte ptr [di], '$'     ; Null-terminate the string
+    mov len, 0
+    l1:
+        div bx
+        push dx
+        inc len
+        cmp ax, 0
+        je l2
+        mov dx, 0
+        jmp l1
     
-convert_loop:
-    xor dx, dx           ; Clear DX for division
-    div bx               ; Divide AX by 10, quotient in AX, remainder in DX
-    add dl, '0'          ; Convert remainder to ASCII
-    dec di               ; Move DI to the left
-    mov [di], dl         ; Store ASCII digit in buffer
-    test ax, ax          ; Check if quotient is zero
-    jnz convert_loop     ; If not zero, continue conversion
-    ret
-int_to_str endp
+    l2:
+        mov cl, len
+        mov si, offset buffer
+        loop1:
+            pop dx
+            add dx, 48
+            mov [si], dx
+            inc si
+            loop loop1
+    mov [si], '$'
+
+    mov ah, 09h
+    mov dx, offset buffer
+    int 21h
+
+    mov ah, 4ch
+    int 21h
+
+
+
+main endp
+
 
 end main
