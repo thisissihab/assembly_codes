@@ -1,0 +1,29 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    STR1 DB 5 DUP('$')
+
+.CODE
+MAIN PROC 
+    MOV AX, @DATA
+    MOV DS, AX
+
+    MOV SI, OFFSET STR1
+    INPUT:
+        MOV AH, 01H
+        INT 21H
+        MOV [SI], AX
+        INC SI
+        CMP AL, 13
+        JNE INPUT
+
+    MOV DX, OFFSET STR1
+    MOV AH, 09H
+    INT 21H
+
+    MOV AH, 4CH
+    INT 21H
+
+MAIN ENDP
+END MAIN
